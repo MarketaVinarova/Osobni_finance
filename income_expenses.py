@@ -27,7 +27,15 @@ class Record:
         #     print("File wasn´t found.")
 
     @staticmethod
-    def new_file_with_header() -> None:
+    def file_exists(path: str) -> bool:
+        try:
+            with open(path, "r") as file:
+                return True
+        except FileNotFoundError:
+            return False
+
+    @staticmethod
+    def new_file_with_header(path: str) -> None:
         try:
             df = pd.DataFrame(
                 {"typ": [],
@@ -37,12 +45,12 @@ class Record:
                  "category": [],
                  "kde": []}
             )
-            df.to_csv(path_or_buf="list_of_records.csv", mode="w", index=False, sep=";", header=True)
+            df.to_csv(path_or_buf=path, mode="w", index=False, sep=";", header=True)
 
         except Exception as e:
-             print("test")
+             print("Chyba práce se souborem.")
 
-    def add_record_to_file(self) -> None:
+    def add_record_to_file(self, path: str) -> None:
         try:
             df = pd.DataFrame(
                 {"typ": [self.kind],
@@ -53,7 +61,7 @@ class Record:
                  "kde": [self.where]}
             )
 
-            df.to_csv(path_or_buf="list_of_records.csv", mode="a", index=False, sep=";", header=False)
+            df.to_csv(path_or_buf=path, mode="a", index=False, sep=";", header=False)
 
         except FileNotFoundError as e:
             print("File wasn´t found.")
