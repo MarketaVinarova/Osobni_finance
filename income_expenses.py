@@ -1,3 +1,4 @@
+import pandas as pd
 from datetime import datetime
 
 class Record:
@@ -8,7 +9,7 @@ class Record:
     #   items_list = seznam, co bylo nakoupeno, např. "rohlíky, mléko, jogurt"
     #   category = kategorie, např. jídlo, drogerie, cestování,...
     #   where = kde jsem nakoupila, komu jsem půjčila, od koho je příjem,...
-    def __init__(self, kind: int, price: float, date: datetime, items_list: str, category: str, where: str) -> None:
+    def __init__(self, kind: int, date: datetime, price: float, items_list: str, category: str, where: str) -> None:
         self.kind = kind
         self.price = price
         self.date = date
@@ -17,10 +18,45 @@ class Record:
         self.where = where
 
     def read_record_from_file(self) -> None:
-        ...
+        pass
+        # try:
+        #     list_of_records_df = pd.read_csv("list_of_records.csv")
+        #     with open("list_of_records.csv", "r") as file:
+        #         result = file.read()
+        # except FileNotFoundError as e:
+        #     print("File wasn´t found.")
 
-    def save_record_to_file(self) -> None:
-        ...
+    @staticmethod
+    def new_file_with_header() -> None:
+        try:
+            df = pd.DataFrame(
+                {"typ": [],
+                 "date": [],
+                 "cena": [],
+                 "za co": [],
+                 "category": [],
+                 "kde": []}
+            )
+            df.to_csv(path_or_buf="list_of_records.csv", mode="w", index=False, sep=";", header=True)
+
+        except Exception as e:
+             print("test")
+
+    def add_record_to_file(self) -> None:
+        try:
+            df = pd.DataFrame(
+                {"typ": [self.kind],
+                 "date": [self.date],
+                 "cena": [self.price],
+                 "za co": [self.items_list],
+                "category": [self.category],
+                 "kde": [self.where]}
+            )
+
+            df.to_csv(path_or_buf="list_of_records.csv", mode="a", index=False, sep=";", header=False)
+
+        except FileNotFoundError as e:
+            print("File wasn´t found.")
 
     def print_record(self) -> str:
         ...
